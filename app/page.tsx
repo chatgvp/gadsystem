@@ -1,95 +1,116 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client"
+import SpecificMonth from "./components/SpecificMonth"
+import MonthlyAttendance from "./components/MonthlyAttendance"
+import MonthlyGender from "./components/MonthlyGender"
+import QuarterlyGender from "./components/QuarterlyGender"
+import EventList from "./components/List"
+import { Center, Container, SimpleGrid } from "@mantine/core"
+import { useState, useEffect } from "react"
+import {
+    fetchSpecificEventData,
+    fetchMonthlyAttendanceData,
+    fetchMonthlyGenderData,
+    fetchQuarterlyGenderData,
+    getEventsList,
+} from "./api"
+import { MonthPickerInput } from "@mantine/dates"
 
 export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
+    const [specificEventData, setSpecificEventData] = useState([])
+    const [monthlyAttendanceData, setMonthlyAttendanceData] = useState([])
+    const [monthlyGenderData, setMonthlyGenderData] = useState([])
+    const [quarterlyGenderData, setQuarterlyGenderData] = useState([])
+    const [eventList, setEventList] = useState([])
+    const [databaseChange, setDatabaseChange] = useState(0)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const specificEventData = await fetchSpecificEventData()
+                setSpecificEventData(specificEventData)
+
+                const monthlyAttendanceData = await fetchMonthlyAttendanceData()
+                setMonthlyAttendanceData(monthlyAttendanceData)
+
+                const monthlyGenderData = await fetchMonthlyGenderData()
+                setMonthlyGenderData(monthlyGenderData)
+
+                const quarterlyGenderData = await fetchQuarterlyGenderData()
+                setQuarterlyGenderData(quarterlyGenderData)
+
+                const eventData = await getEventsList()
+                setEventList(eventData)
+            } catch (error) {
+                console.error("Error fetching data:", error)
+            }
+        }
+
+        fetchData()
+    }, [databaseChange]) // Re-fetch data when databaseChange state changes
+
+    const [dateValue, setDateValue] = useState<Date | null>(new Date())
+    const [formattedDate, setFormattedDate] = useState({
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear(),
+    })
+
+    useEffect(() => {
+        if (dateValue) {
+            const format = {
+                month: dateValue.getMonth() + 1,
+                year: dateValue.getFullYear(),
+            }
+            setFormattedDate(format)
+        }
+    }, [dateValue])
+
+    return (
         <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            <Container size="xl">
+                <Center>
+                    {" "}
+                    <MonthPickerInput
+                        defaultValue={new Date()}
+                        placeholder="Pick Date"
+                        value={dateValue}
+                        onChange={setDateValue}
+                    />
+                </Center>
+                <SimpleGrid cols={2} spacing="xl" verticalSpacing="xl">
+                    <div>
+                        <h1>Specific Event</h1>
+                        <SpecificMonth
+                            totalAttendanceData={specificEventData}
+                            date={`${formattedDate.month} ${formattedDate.year}`}
+                        />
+                    </div>
+                    <div>
+                        <h1>Monthly Attendance</h1>
+                        <MonthlyAttendance
+                            totalAttendanceData={monthlyAttendanceData}
+                            date={`${formattedDate.month} ${formattedDate.year}`}
+                        />
+                    </div>
+                    <div>
+                        <h1>Gender Monthly Distribution</h1>
+                        <MonthlyGender
+                            genderMonthlyData={monthlyGenderData}
+                            date={`${formattedDate.month} ${formattedDate.year}`}
+                        />
+                    </div>
+                    <div>
+                        <h1>Gender Quarterly Distribution</h1>
+                        <QuarterlyGender
+                            genderDistributionData={quarterlyGenderData}
+                            date={`${formattedDate.month} ${formattedDate.year}`}
+                        />
+                    </div>
+                </SimpleGrid>
+                <div>
+                    <h1>LIST | Event List</h1>
+                    <EventList data={eventList} />
+                </div>
+            </Container>
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    )
 }
