@@ -7,7 +7,6 @@ import "@mantine/core/styles.css"
 import "@mantine/dates/styles.css"
 import {
     MantineProvider,
-    // ColorSchemeScript,
     Burger,
     createTheme,
     AppShell,
@@ -131,7 +130,7 @@ export default function RootLayout({
                                         </Text>
                                         <Group justify="flex-end">
                                             <Button onClick={handlePrint}>
-                                                Print
+                                                Export
                                             </Button>
                                             <MyButtonWithModal />
                                         </Group>

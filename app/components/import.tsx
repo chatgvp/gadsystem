@@ -21,9 +21,6 @@ import {
     IconTrash,
 } from "@tabler/icons-react"
 import { Table, TableData } from "@mantine/core"
-// import { FiEdit, FiTrash2 } from "react-icons/fa"
-
-import AddEvent from "./importComponents/addEvent"
 
 import { getEvents, deleteEvent, updateEvent } from "@/app/api"
 import { modals } from "@mantine/modals"
@@ -100,7 +97,8 @@ const MyButtonWithEventModal = () => {
 
                 if (response.ok) {
                     console.log("Event added successfully.")
-                    window.location.reload()
+                    // window.location.reload()
+                    reloadPageAndShowAlert("Event added successfully.")
                 } else {
                     console.error(
                         "Failed to add event. Server response:",
@@ -136,7 +134,8 @@ const MyButtonWithEventModal = () => {
 
                 if (response.ok) {
                     console.log("Existing event added successfully.")
-                    window.location.reload()
+                    // window.location.reload()
+                    reloadPageAndShowAlert("Existing event added successfully.")
                 } else {
                     console.error(
                         "Failed to add existing event. Server response:",
@@ -209,6 +208,7 @@ const MyButtonWithEventModal = () => {
         try {
             const result = await updateEvent(eventId, newData)
             console.log(result.message)
+            reloadPageAndShowAlert(result.message)
         } catch (error) {
             console.error("Error updating event:", error)
         }
@@ -231,10 +231,16 @@ const MyButtonWithEventModal = () => {
             },
         })
 
+    const reloadPageAndShowAlert = (message: string) => {
+        window.location.reload()
+        alert(message)
+    }
+
     const handleDeleteEvent = async (eventId: number) => {
         try {
             const result = await deleteEvent(eventId)
-            console.log(result.message)
+            // console.log(result.message)
+            reloadPageAndShowAlert(result.message)
         } catch (error) {
             console.error("Error deleting event:", error)
         }

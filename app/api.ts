@@ -22,6 +22,11 @@ export const fetchQuarterlyGenderData = async () => {
     return response.json()
 }
 
+export const fetchYearlyGenderData = async () => {
+    const response = await fetch(`${BASE_URL}/charts/yearly_distribution`)
+    return response.json()
+}
+
 export const getEvents = async () => {
     const response = await fetch(`${BASE_URL}/events/read`)
     return response.json()
@@ -50,22 +55,15 @@ export const deleteEvent = async (eventId: number) => {
     }
 }
 
-export const updateEvent = async (eventId: number, newData: string) => {
-    console.log("api", eventId)
-    console.log("api", newData)
-
-    const data = { event_name: newData } // Create an object with the data
-
+export const updateEvent = async (eventId: number, event_name: string) => {
     try {
         const response = await fetch(`${BASE_URL}/events/update/${eventId}`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
             },
-            body: JSON.stringify(data), // Convert data to JSON format
+            body: new URLSearchParams({ event_name }),
         })
-
-        console.log("ASdasd", newData)
 
         if (response.ok) {
             return { message: "Event updated successfully" }

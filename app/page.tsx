@@ -4,6 +4,7 @@ import MonthlyAttendance from "./components/MonthlyAttendance"
 import MonthlyGender from "./components/MonthlyGender"
 import QuarterlyGender from "./components/QuarterlyGender"
 import EventList from "./components/List"
+import YearlyGender from "./components/YearlyGender"
 import { Center, Container, SimpleGrid } from "@mantine/core"
 import { useState, useEffect } from "react"
 import {
@@ -11,6 +12,7 @@ import {
     fetchMonthlyAttendanceData,
     fetchMonthlyGenderData,
     fetchQuarterlyGenderData,
+    fetchYearlyGenderData,
     getEventsList,
 } from "./api"
 import { MonthPickerInput } from "@mantine/dates"
@@ -20,6 +22,7 @@ export default function Home() {
     const [monthlyAttendanceData, setMonthlyAttendanceData] = useState([])
     const [monthlyGenderData, setMonthlyGenderData] = useState([])
     const [quarterlyGenderData, setQuarterlyGenderData] = useState([])
+    const [yearlyGenderData, setYearlyGenderData] = useState([])
     const [eventList, setEventList] = useState([])
     const [databaseChange, setDatabaseChange] = useState(0)
 
@@ -37,6 +40,9 @@ export default function Home() {
 
                 const quarterlyGenderData = await fetchQuarterlyGenderData()
                 setQuarterlyGenderData(quarterlyGenderData)
+
+                const yearlyGenderData = await fetchYearlyGenderData()
+                setYearlyGenderData(yearlyGenderData)
 
                 const eventData = await getEventsList()
                 setEventList(eventData)
@@ -64,6 +70,29 @@ export default function Home() {
         }
     }, [dateValue])
 
+    const getMonthName = (monthNumber: any) => {
+        const months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ]
+        // Make sure monthNumber is in a valid range (1 to 12)
+        const validMonthNumber = Math.max(1, Math.min(12, monthNumber))
+
+        return months[validMonthNumber - 1]
+    }
+
+    const monthName = getMonthName(formattedDate.month)
+
     return (
         <div>
             <Container size="xl">
@@ -76,9 +105,11 @@ export default function Home() {
                         onChange={setDateValue}
                     />
                 </Center>
-                <SimpleGrid cols={2} spacing="xl" verticalSpacing="xl">
+                <SimpleGrid cols={1} spacing="xl" verticalSpacing="xl">
                     <div>
-                        <h1>Specific Event</h1>
+                        <h1>
+                            Events in {monthName} {formattedDate.year}
+                        </h1>
                         <SpecificMonth
                             totalAttendanceData={specificEventData}
                             date={`${formattedDate.month} ${formattedDate.year}`}
@@ -105,8 +136,15 @@ export default function Home() {
                             date={`${formattedDate.month} ${formattedDate.year}`}
                         />
                     </div>
+
+                    <div>
+                        <h1>Yearly Distribution</h1>
+                        <YearlyGender
+                            genderDistributionData={yearlyGenderData}
+                        />
+                    </div>
                 </SimpleGrid>
-                <div>
+                <div className="exclude-print">
                     <h1>LIST | Event List</h1>
                     <EventList data={eventList} />
                 </div>
