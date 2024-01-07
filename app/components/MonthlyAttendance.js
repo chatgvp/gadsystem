@@ -1,6 +1,6 @@
-const React = require("react")
-const { Bar } = require("react-chartjs-2")
-const {
+import React from "react";
+import { Bar } from "react-chartjs-2";
+import {
     LinearScale,
     BarElement,
     CategoryScale,
@@ -9,7 +9,7 @@ const {
     PointElement,
     Tooltip,
     Chart,
-} = require("chart.js")
+} from "chart.js";
 
 Chart.register(
     LinearScale,
@@ -19,16 +19,16 @@ Chart.register(
     LineElement,
     PointElement,
     Tooltip
-)
+);
 
-Chart.register(LinearScale, BarElement, CategoryScale)
+Chart.register(LinearScale, BarElement, CategoryScale);
 
 const MonthlyAttendance = ({ totalAttendanceData, date }) => {
-    const formattedDate = convertStringToDateObject(date)
+    const formattedDate = convertStringToDateObject(date);
     const filteredData = totalAttendanceData.filter(
         (item) => item.year === formattedDate.year
-    )
-    filteredData.sort((a, b) => a.month - b.month)
+    );
+    filteredData.sort((a, b) => a.month - b.month);
     const data = {
         labels: filteredData.map((item) => getMonthName(item.month)),
         datasets: [
@@ -39,14 +39,14 @@ const MonthlyAttendance = ({ totalAttendanceData, date }) => {
                 backgroundColor: "rgba(255, 99, 132, 0.2)",
             },
         ],
-    }
+    };
 
     return (
         <div>
             <Bar data={data} />
         </div>
-    )
-}
+    );
+};
 
 // Helper function to get month name
 const getMonthName = (month) => {
@@ -63,16 +63,16 @@ const getMonthName = (month) => {
         "October",
         "November",
         "December",
-    ]
-    return monthNames[month - 1]
-}
+    ];
+    return monthNames[month - 1];
+};
 
 // Helper function to convert date string to object
 const convertStringToDateObject = (dateString) => {
-    const dateArray = dateString.split(" ")
-    const month = parseInt(dateArray[0])
-    const year = parseInt(dateArray[1])
-    return { month, year }
-}
+    const dateArray = dateString.split(" ");
+    const month = parseInt(dateArray[0]);
+    const year = parseInt(dateArray[1]);
+    return { month, year };
+};
 
-module.exports = MonthlyAttendance
+export default MonthlyAttendance;

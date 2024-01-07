@@ -1,8 +1,8 @@
-const React = require("react")
-const { Bar } = require("react-chartjs-2")
-const { LinearScale, BarElement, CategoryScale, Chart } = require("chart.js")
+import React from "react";
+import { Bar } from "react-chartjs-2";
+import { LinearScale, BarElement, CategoryScale, Chart } from "chart.js";
 
-Chart.register(LinearScale, BarElement, CategoryScale)
+Chart.register(LinearScale, BarElement, CategoryScale);
 
 const convertStringToDateObject = (dateString) => {
     const dateArray = dateString.split(" ")
@@ -37,4 +37,4 @@ const SpecificMonth = ({ totalAttendanceData, date }) => {
     )
 }
 
-module.exports = SpecificMonth
+export default SpecificMonth;

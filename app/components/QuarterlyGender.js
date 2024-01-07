@@ -1,8 +1,8 @@
-const React = require("react")
-const { Bar } = require("react-chartjs-2")
-const { LinearScale, BarElement, CategoryScale, Chart } = require("chart.js")
+import React from "react";
+import { Bar } from "react-chartjs-2";
+import { LinearScale, BarElement, CategoryScale, Chart } from "chart.js";
 
-Chart.register(LinearScale, BarElement, CategoryScale)
+Chart.register(LinearScale, BarElement, CategoryScale);
 
 const QuarterlyGender = ({ genderDistributionData, date }) => {
     const formattedDate = convertStringToDateObject(date)
@@ -64,4 +64,6 @@ const convertStringToDateObject = (dateString) => {
     return { month, year }
 }
 
-module.exports = QuarterlyGender
+// module.exports = QuarterlyGender
+
+export default QuarterlyGender

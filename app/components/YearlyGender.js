@@ -1,8 +1,8 @@
-const React = require("react")
-const { Bar } = require("react-chartjs-2")
-const { LinearScale, BarElement, CategoryScale, Chart } = require("chart.js")
+import React from "react";
+import { Bar } from "react-chartjs-2";
+import { LinearScale, BarElement, CategoryScale, Chart } from "chart.js";
 
-Chart.register(LinearScale, BarElement, CategoryScale)
+Chart.register(LinearScale, BarElement, CategoryScale);
 
 const YearlyGender = ({ genderDistributionData }) => {
     const uniqueYears = [
@@ -66,4 +66,6 @@ const getTotalCountByCategory = (data, year, category) => {
         .reduce((total, item) => total + item.total_count, 0)
 }
 
-module.exports = YearlyGender
+// module.exports = YearlyGender
+
+export default YearlyGender
