@@ -105,7 +105,7 @@ export default function Home() {
                         onChange={setDateValue}
                     />
                 </Center>
-                <SimpleGrid cols={1} spacing="xl" verticalSpacing="xl">
+                <SimpleGrid cols={2} spacing="xl" verticalSpacing="xl">
                     <div>
                         <h1>
                             Events in {monthName} {formattedDate.year}
